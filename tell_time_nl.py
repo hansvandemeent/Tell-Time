@@ -16,7 +16,7 @@ class TellTime():
     
     
     def __init__(self, say_minutes):
-        self.units = ('', 'een', 'twee', 'drie', 'vier', 'vijf', 'zes', 'zeven', 'acht', 'negen', 'tien', 'elf', 'twaalf', 'dertien', 'veertien', 'vijftien', 'zestien', 'zeventien', 'achttien', 'negentien', 'twintig')
+        self.units = ('', 'één', 'twee', 'drie', 'vier', 'vijf', 'zes', 'zeven', 'acht', 'negen', 'tien', 'elf', 'twaalf', 'dertien', 'veertien', 'vijftien', 'zestien', 'zeventien', 'achttien', 'negentien', 'twintig')
         self.tens = ('', 'ten', 'twenty', 'thirty', 'forty', 'fifty')
         self.say_minutes = say_minutes
         
@@ -53,9 +53,9 @@ class TellTime():
             tell = self.tens[minute_tens] + '-' + self.units[minute_units]
  
         if (m == 1 and self.say_minutes):
-            tell += ' minuut '  
+            tell += ' minuut'  
         if (m > 1 and self.say_minutes):
-            tell += ' minuten '
+            tell += ' minuten'
             
         return tell   
             
@@ -98,8 +98,8 @@ print(tell_time.tell(7, 40))
 
 for n in range(60):
     print(f'8:{n}  {tell_time.tell(8, n)} / {tell_time.tell_digits(8, n)}') 
-    #speech.say(tell_time.tell(8, n), 'nl_NL')
-    #finish_speaking()
+    speech.say(tell_time.tell(8, n), 'nl_NL')
+    finish_speaking()
     
 for n in range(24):
     print(f'{n}:45  {tell_time.tell(n, 45)} / {tell_time.tell_digits(n, 45)}')
