@@ -17,7 +17,7 @@ class TellTime():
     
     def __init__(self, say_minutes):
         self.units = ('', 'één', 'twee', 'drie', 'vier', 'vijf', 'zes', 'zeven', 'acht', 'negen', 'tien', 'elf', 'twaalf', 'dertien', 'veertien', 'vijftien', 'zestien', 'zeventien', 'achttien', 'negentien', 'twintig')
-        self.tens = ('', 'ten', 'twenty', 'thirty', 'forty', 'fifty')
+        self.tens = ('', 'tien', 'twintig', 'derig', 'veertig', 'vijftig')
         self.say_minutes = say_minutes
         
     def tell_digits(self, hours, minutes):
