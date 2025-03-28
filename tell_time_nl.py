@@ -19,6 +19,9 @@ class TellTime():
         self.units = ('', 'één', 'twee', 'drie', 'vier', 'vijf', 'zes', 'zeven', 'acht', 'negen', 'tien', 'elf', 'twaalf', 'dertien', 'veertien', 'vijftien', 'zestien', 'zeventien', 'achttien', 'negentien', 'twintig')
         self.tens = ('', 'tien', 'twintig', 'derig', 'veertig', 'vijftig')
         self.say_minutes = say_minutes
+        self.ts = ((' '. 'minute', 'minutes', 'hour', 'hours', 'to', 'past', 'quarter', 'half'),
+                   (' ', 'minuut', 'minuten', 'uur', 'uren', 'voor', 'over', 'kwartier', 'half'))
+        
         
     def tell_digits(self, hours, minutes):
         minute_units = minutes % 10
@@ -80,7 +83,39 @@ class TellTime():
             case _:
                 s = 'Error'
         return s
+        
+    def m(minutes):
+        return f'{minutes} '
+        
+    def h(hours):
+        returnf'{hours} '
+        
+    def translate(self, hours, minutes, cmd, language):
+        match cmd:
+            'h': 
 
+    def tell(self, hours, minutes):
+        match minutes:
+            case 0:
+                s = self.h('h') 
+            case n if n in range(1, 15):
+                s = mh
+            case 15:
+                s = qh
+            case n if n in range(16, 30):
+                s = ns
+            case 30:
+                s = s
+            case n if n in range(31, 45):
+                s = os
+            case 45:
+                s = sh
+            case n if n in range(46, 60):
+                s = rh
+            case _:
+                s = 'Error'
+        return s
+        
 ''' Test TimeTell class '''                
 tell_time = TellTime(True)
 
