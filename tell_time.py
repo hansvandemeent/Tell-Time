@@ -1,85 +1,137 @@
-'''
-12:00 12 o'clock, twelve o'clock.
-11:15 quarter past 11, quarter past eleven
-10:30 half past 10, half past ten
-9:45 quarter to 10, quarter to ten
-8:20 20 past 8, twenty past eight
-7:40 20 to 8, twenty to eight
+import string
+   
+   
 class TellTime():
-'''
-    
-class TellTime():
+    """
+        TellTime class converts time digits (10:25) to text (twenty-five after ten)
+        It has now support for English, Dutch and German
+        In Dutch and German there are some differences in conversion, like 10:35 is "vijf over half 11"
+        In English make a diffrence between midnight and noon
+    """
     
     def __init__(self):
-        self.units = \
-        (('', 'één', 'twee', 'drie', 'vier', 'vijf', 'zes', 'zeven', 'acht', 'negen', 'tien', \
-        'elf', 'twaalf', 'dertien', 'veertien', 'vijftien', 'zestien', 'zeventien', 'achttien', 'negentien', 'twintig'),
-        ('', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', \
-        'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'), \
-        ('', 'ein', 'zwei', 'drei', 'vier', 'fünf', 'zechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebsehn', 'achtzehn', 'neunzehn', 'zwanstig'))
+        self.units = (
+                     ('noon', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+                         'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
+                         'seventeen', 'eighteen', 'nineteen', 'twenty',
+                         'twenty-one', 'twenty-two', 'twenty-three', 'twenty-four', 'midnight'),
+                     ('twaalf', 'één', 'twee', 'drie', 'vier', 'vijf', 'zes', 'zeven', 'acht',
+                         'negen', 'tien', 'elf', 'twaalf', 'dertien', 'veertien',
+                         'vijftien', 'zestien', 'zeventien', 'achttien', 'negentien',
+                         'twintig', 'eenentwintig', 'tweeentwintig', 'drieentwintig', 'vierentwintig', 'twaalf'),
+                     ('zwölf', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht',
+                         'neun', 'zehn', 'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn',
+                         'sechzehn', 'siebsehn', 'achtzehn', 'neunzehn', 'zwanzig',
+                         'einundzwanzig', 'zweiundzwanzig', 'dreiundzwanzig', 'vierundzwanzieg', 'zwölf')
+                     )
         
-        self.tens = (('', 'tien', 'twintig', 'derig', 'veertig', 'vijftig'), \
-                     ('', 'ten', 'twenty-', 'thirty-', 'fourty-', 'fifty-'), \
-                     ('', 'zehn', 'zwanstig', 'dreizig', 'vierzig', 'fünfzig'))
+        self.tens = (
+                    ('', 'ten', 'twenty-', 'thirty-', 'fourty-', 'fifty-'),
+                    ('', 'tien', 'twintig', 'derig', 'veertig', 'vijftig'),
+                    ('', 'zehn', 'zwanzig', 'dreiẞig', 'vierzig', 'fünfzig')
+                    )
         
-        
-        self.strings = ((' ', 'minuut', 'minuten', 'uur', 'uren', 'voor', 'over', 'kwart', 'half'),  \
-                        (' ', 'minute', 'minutes', "o'clock", 'hours', 'to', 'past', 'quarter', 'half'), \
-                        (' ', 'minute', 'minuten', 'Uhr', 'Uhren', 'vor', 'nach', 'viertel', 'halb'))
-     
-    def minutes_tell(self, m, language):
+        self.strings = (
+                       (' ', 'minute ', 'minutes ', " o'clock", 'hours', 'to ', 'past ', 'quarter ', 'half '),
+                       (' ', 'minuut ', 'minuten ', ' uur', 'uren', 'voor ', 'over ', 'kwart ', 'half '),
+                       (' ', 'minute ', 'minuten ', ' Uhr ', 'Uhren ', 'vor ', 'nach ', 'viertel ', 'halb '))
+                        
+    def set_language(self, lang):
+        match lang:
+            case 'en_US': self.language = 0
+            case 'nl_NL': self.language = 1
+            case 'de_DE': self.language = 2
+            case '_': self.language = 0
+            
+    def minutes_tell(self, m):
+        """
+            Numbers up to 20 sometimes spelled and pronounced differently:
+            thirteen and not threeteen
+            veertien and not viertien
+            siebsehn and not siebensehn
+            Thats why they are included in the tuple
+        """
         minute_units = m % 10
         minute_tens = int(m / 10)
-        if (m < 21):
-            minutes = self.units[language][m]
+        if (m < 25):
+            minutes = self.units[self.language][m] + ' '
         else:
-            minutes= self.tens[language][minute_tens] + self.units[language][minute_units]
-            
+            minutes = self.tens[self.language][minute_tens] + self.units[self.language][minute_units] + ' '
         return minutes
         
-                
-    def translate(self, hours, minutes, cmd, language):
+    def translate(self, hours, minutes, commands):
+        command_list = commands.split(' ')
         s = ''
-        for c in cmd:
-            match c:
-                case 'h': s+= self.units[language][hours]
-                case 'm': s+= self.units[language][minutes]
-                case 'n': s+= self.minutes_tell(30 - minutes, language)
-                case 'o': s+= self.minutes_tell(60 - minutes, language)
-                case 'p': s+= self.minutes_tell(minutes - 30, language)
-                case 'r': s+= self.units[language][hours + 1]
-                case 'M': s+= self.strings[language][1] # minute
-                case 'N': s+= self.strings[language][2] # minutes
-                case 'H': s+= self.strings[language][3] # o'clock'
-                case 'I': s+= self.strings[language][4] # hours
-                case 'T': s+= self.strings[language][5] # to
-                case 'O': s+= self.strings[language][6] # past
-                case 'Q': s+= self.strings[language][7] # quarter
-                case 'S': s+= self.strings[language][8] # half
-                case ' ': s+= ' '
-                case 'E': s+= 'Error'
+        for command in command_list:
+            match command:
+                case 'hour': 
+                    s += self.units[self.language][25] if hours == 0 \
+                    else self.units[self.language][hours % 12]
+                case 'minutes_after_hour': s += self.minutes_tell(minutes)
+                case 'minutes_to_half': s += self.minutes_tell(30 - minutes)
+                case 'minutes_to_hour': s += self.minutes_tell(60 - minutes)
+                case 'minutes_after_half': s += self.minutes_tell(minutes - 30)
+                case 'next_hour': s += self.units[self.language][hours + 1]
+                case 'MINUTE': s += self.strings[self.language][1]  # minute
+                case 'MINUTES': s += self.strings[self.language][2]  # minutes
+                case 'HOUR': s += self.strings[self.language][3]  # o'clock'
+                case 'HOURS': s += self.strings[self.language][4]  # hours
+                case 'TO': s += self.strings[self.language][5]  # to
+                case 'PAST': s += self.strings[self.language][6]  # past
+                case 'QUARTER': s += self.strings[self.language][7]  # quarter
+                case 'HALF': s += self.strings[self.language][8]  # half
+                case '_':  s += ' '
+                case 'E':  s += 'Error'
         return s
 
-    def tell(self, hours, minutes, language):
+    ''' lower case: value, upper case: text '''
+    def tell(self, hours, minutes):
+        """
+           There are up to 8 distinct ways to pronounce minutes time,
+               0, 1-14, 15, 16-29, 30, 31-44, 45, 46-59
+        """
         match minutes:
-            case 0: s = 'h H'
-            case n if n in range(1, 15): s = 'm O h'
-            case 15: s = 'Q O h'
-            case n if n in range(16, 30): s = 'n T S r' if language == 0 else 'h m'
-            case 30: s = 'S r' if language == 0 else 'S O h'
-            case n if n in range(31, 45): s = 'p O S r' if language == 0 else 'o T r'
-            case 45: s = 'Q T r'
-            case n if n in range(46, 60): s = 'o T r'
+            case 0: s = 'hour HOUR'
+            case n if n in range(1, 15): s = 'minutes_after_hour PAST hour'
+            case 15: s = 'QUARTER PAST hour'
+            case n if n in range(16, 30): s = 'minutes_after_hour PAST hour' if self.language == 0 \
+                else 'minutes_to_half TO HALF next_hour'
+            case 30: s = 'HALF PAST hour' if self.language == 0 else 'HALF next_hour'
+            case n if n in range(31, 45): s = 'minutes_after_hour PAST hour' if self.language == 0 \
+                else 'minutes_after_half PAST HALF next_hour'
+            case 45: s = 'QUARTER TO next_hour'
+            case n if n in range(46, 60): s = 'minutes_to_hour TO next_hour'
             case _: s = 'Error'
-        return  self.translate(hours, minutes, s, language)
+            
+         
+        return self.translate(hours, minutes, s)
 
-telltime = TellTime()   
 
-print('8:00 ' + telltime.tell(8, 0, 0) + '  ' + telltime.tell(8, 0, 1) + '  ' + telltime.tell(8, 0, 2))
-print('8:10 ' + telltime.tell(8, 10, 0) + '  ' + telltime.tell(8, 10, 1))
-print('8:15 ' + telltime.tell(8, 15, 0) + '  ' + telltime.tell(8, 15, 1))
-print('8:20 ' + telltime.tell(8, 20, 0) + '  ' + telltime.tell(8, 20, 1))
-print('8:30 ' + telltime.tell(8, 30, 0) + '  ' + telltime.tell(8, 30, 1))
-print('8:35 ' + telltime.tell(8, 35, 0) + '  ' + telltime.tell(8, 35, 1))
-print('8:45 ' + telltime.tell(8, 45, 0) + '  ' + telltime.tell(8, 45, 1))
-print('8:55 ' + telltime.tell(8, 55, 0) + '  ' + telltime.tell(8, 55, 1))
+telltime = TellTime()
+    
+    telltime.set_language('nl_NL')
+    for n in range(0, 60, 1):
+        print(f'8:{n}  {telltime.tell(8, n)}')
+print('-' * 30)
+
+for n in range(0, 24, 1):
+    print(f'{n}:15  {telltime.tell(n, 15)}')
+print('-' * 30)  
+   
+telltime.set_language('en_US')
+for n in range(0, 60, 1):
+    print(f'8:{n}  {telltime.tell(8, n)}')
+print('-' * 30) 
+   
+for n in range(0, 24, 1):
+    print(f'{n}:15 {telltime.tell(n, 15)}')
+print('-' * 30)  
+
+telltime.set_language('de_DE')
+for n in range(0, 60, 1):
+    print(f'8:{n}  {telltime.tell(8, n)}')
+print('-' * 30) 
+
+for n in range(0, 24, 1):
+    print(f'{n}:8  {telltime.tell(n, 15)}')
+
